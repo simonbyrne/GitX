@@ -37,8 +37,6 @@ tree2sub_id = sha1"57961903709ed4eb0a5359704c951f9e1f7cad3e"
 
 tag_id = sha1"fa4891b4d2ea7b3d79cb37e38ac6391a98aff2cb"
 
-
-
 repo = GitRepo(joinpath(dir,".git"))
 
 # commits
@@ -65,6 +63,10 @@ tag = GitTag(repo, tag_id)
 @test tag.object == cmt2_id
 @test tag.tag == "tagA"
 @test tag.message == "create tagA\n"
+
+# refs
+@test GitX.getref(repo, "heads/master") == cmt2_id
+@test GitX.getref(repo, "tags/tagA") == tag_id
 
 
 # 2. Pack files
@@ -100,6 +102,9 @@ tag = GitTag(repo, tag_id)
 @test tag.tag == "tagA"
 @test tag.message == "create tagA\n"
 
+# refs
+@test GitX.getref(repo, "heads/master") == cmt2_id
+@test GitX.getref(repo, "tags/tagA") == tag_id
 
 # 3. Clean up
 rm(dir, recursive=true)

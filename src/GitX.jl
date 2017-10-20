@@ -11,4 +11,6 @@ include("repo.jl")
 include("objects/object.jl")
 include("pack.jl")
 
+include("refs.jl")
+
 end # module
