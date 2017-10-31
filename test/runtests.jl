@@ -4,25 +4,27 @@ using Base.Test
 # 1. Set up a git repository
 
 ## set env vars to ensure commit hashes are constant
-ENV["GIT_AUTHOR_NAME"]  = "Test Name"
-ENV["GIT_AUTHOR_EMAIL"] = "test@example.com"
-ENV["GIT_AUTHOR_DATE"]  = "2017-09-30T17:18:19+0000"
-
-ENV["GIT_COMMITTER_NAME"]  = "Test Name"
-ENV["GIT_COMMITTER_EMAIL"] = "test@example.com"
-ENV["GIT_COMMITTER_DATE"]  = "2017-09-30T17:18:19+0000"
+gitenv = Dict(
+"GIT_AUTHOR_NAME"  => "Test Name",
+"GIT_AUTHOR_EMAIL" => "test@example.com",
+"GIT_AUTHOR_DATE"  => "2017-09-30T17:18:19+0000",
+"GIT_COMMITTER_NAME"  => "Test Name",
+"GIT_COMMITTER_EMAIL" => "test@example.com",
+"GIT_COMMITTER_DATE"  => "2017-09-30T17:18:19+0000")
 
 @show dir = mktempdir()
 cd(dir) do
-    run(`git init --quiet`)
-    write("a.txt", "aaaa")
-    run(`git add a.txt`)
-    run(`git commit --quiet -m "add a.txt"`)
-    mkdir("sub")
-    write("sub/b.txt", "bbbb")
-    run(`git add sub/b.txt`)
-    run(`git commit --quiet -m "add b.txt"`)
-    run(`git tag -a tagA -m "create tagA"`)
+    withenv(gitenv...) do
+        run(`git init --quiet`)
+        write("a.txt", "aaaa")
+        run(`git add a.txt`)
+        run(`git commit --quiet -m "add a.txt"`)
+        mkdir("sub")
+        write("sub/b.txt", "bbbb")
+        run(`git add sub/b.txt`)
+        run(`git commit --quiet -m "add b.txt"`)
+        run(`git tag -a tagA -m "create tagA"`)
+    end
 end
 
 cmt1_id = sha1"c1f9bdd7026000b90c7d8d22ec850861d7d44c7e"

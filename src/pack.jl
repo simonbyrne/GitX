@@ -196,7 +196,7 @@ end
 function getobjdata_pack(repo::GitRepo, packfile::String, offset::Integer, io::IO)
     t, len = read_packobjhead(io)
     if 0x01 <= UInt8(t) <= 0x04
-        zio = ZlibDecompressionStream(io, stop_on_end=true)
+        zio = ZlibDecompressorStream(io, stop_on_end=true)
         return GitRawObject(t, read(zio, len))
     else
         if t == Obj.offset_delta
@@ -210,7 +210,7 @@ function getobjdata_pack(repo::GitRepo, packfile::String, offset::Integer, io::I
         end
 
         src = IOBuffer(rawsrc.data)
-        delta = ZlibDecompressionStream(io, stop_on_end=true)
+        delta = ZlibDecompressorStream(io, stop_on_end=true)
         sourcelen = read_delta_varint(delta)
         targetlen = read_delta_varint(delta)
 

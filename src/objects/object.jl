@@ -54,7 +54,7 @@ Fetch the tag and an array of raw bytes from the "loose" git object name `filena
 """
 function getobjdata_loose(filename)
     open(filename) do f
-        io = ZlibDecompressionStream(f)
+        io = ZlibDecompressorStream(f)
         t = ObjCode(chop(readuntil(io, ' ')))
         k = parse(Int, chop(readuntil(io, '\0')))
         GitRawObject(t, read(io, k))
