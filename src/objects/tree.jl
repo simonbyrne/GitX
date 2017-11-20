@@ -1,4 +1,4 @@
-@enum GitMode mode_normal=0o100644 mode_executable=0o100755 mode_symlink=0o120000 mode_dir=0o040000
+@enum GitMode mode_dir=0o040000 mode_normal=0o100644 mode_executable=0o100755 mode_symlink=0o120000 mode_submodule=0o160000
 
 struct GitTreeEntry
     mode::GitMode
