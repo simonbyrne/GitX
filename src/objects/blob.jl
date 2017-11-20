@@ -12,6 +12,4 @@ function oid(blob::GitBlob)
     SHA.update!(ctx, blob.data)
     return SHA1Hash(SHA.digest!(ctx))
 end
-
-oid(filename::String) = oid(GitBlob(Mmap.mmap(filename)))
    

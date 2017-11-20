@@ -40,3 +40,34 @@ function oid(tree::GitTree)
     end
     return SHA1Hash(SHA.digest!(ctx))
 end
+
+entryorder(entry::GitTreeEntry) = entry.mode == mode_dir ? entry.name*"/" : entry.name
+
+"""
+    GitTreeEntry(fpath[, name])
+
+Construct a `GitTreeEntry` object based on `path`. If no `name` is provided, it is
+assumed to be the `basename(path)`.
+"""
+function GitTreeEntry(path::AbstractString, name::AbstractString=basename(filepath))
+    mode = isdir(path) ? mode_dir : mode_normal
+    hash = oid(path)
+    GitTreeEntry(mode, name, hash)
+end
+
+function GitTree(path::AbstractString, ignore::Glob.FilenameMatch=fn"")
+    names = filter(name -> !ismatch(ignore,name), readdir(path))
+    entries = map(names) do name
+        GitTreeEntry(joinpath(path, name), name)
+    end
+    sort!(entries, by=entryorder)
+    GitTree(entries)
+end
+
+function oid(path::AbstractString, ignore::Glob.FilenameMatch=fn".git")
+    if isdir(path)
+        oid(GitTree(path, ignore))
+    else
+        oid(GitBlob(read(path)))
+    end
+end

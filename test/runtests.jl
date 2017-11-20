@@ -122,5 +122,7 @@ cd(dir) do
     @test treehash(["a.txt","sub/b.txt","sub.foo"]) == tree3_id
 end
 
+@test GitX.oid(dir) == tree3_id
+
 # 4. Cleanup
 rm(dir, recursive=true)
