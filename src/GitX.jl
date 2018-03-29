@@ -17,4 +17,6 @@ include("directory.jl")
 
 include("refs.jl")
 
+include("http.jl")
+
 end # module
