@@ -6,7 +6,7 @@ import DataStructures: SortedDict
 
 using Glob
 
-export @sha1_str, GitRepo, GitBlob, GitTree, GitCommit, GitTag, treehash
+export @sha1_str, GitRepo, GitBlob, GitTree, GitCommit, GitTag, treehash, SHA1
 
 include("hash.jl")
 include("repo.jl")

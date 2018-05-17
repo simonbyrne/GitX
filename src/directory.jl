@@ -33,7 +33,7 @@ function Base.convert(::Type{GitTree}, mtree::GitMutableTree)
         if endswith(name, '/')
             name = chop(name)
         end
-        if obj isa SHA1Hash
+        if obj isa SHA1
             hash = obj
         else
             hash = oid(convert(GitTree, obj))

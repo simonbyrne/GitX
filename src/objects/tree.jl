@@ -3,7 +3,7 @@
 struct GitTreeEntry
     mode::GitMode
     name::String
-    hash::SHA1Hash
+    hash::SHA1
 end
 
 struct GitTree <: GitObject
@@ -17,7 +17,7 @@ Base.sizeof(tree::GitTree) = sum(sizeof, tree.entries)
 function Base.read(io::IO, ::Type{GitTreeEntry})
     mode = GitMode(parse(UInt32,chop(readuntil(io, ' ')),8))
     name = chop(readuntil(io,'\0'))
-    hash = read(io, SHA1Hash)
+    hash = read(io, SHA1)
     return GitTreeEntry(mode, name, hash)
 end
 
@@ -36,9 +36,9 @@ function oid(tree::GitTree)
     SHA.update!(ctx, Vector{UInt8}("tree $(sizeof(tree))\0"))
     for entry in tree.entries
         SHA.update!(ctx, Vector{UInt8}(string(oct(UInt32(entry.mode)),' ',entry.name,'\0')))
-        SHA.update!(ctx, Vector{UInt8}(entry.hash))
+        SHA.update!(ctx, entry.hash.bytes)
     end
-    return SHA1Hash(SHA.digest!(ctx))
+    return SHA1(SHA.digest!(ctx))
 end
 
 entryorder(entry::GitTreeEntry) = entry.mode == mode_dir ? entry.name*"/" : entry.name

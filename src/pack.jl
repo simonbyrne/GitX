@@ -11,12 +11,12 @@ function read_idxhead(io::IO)
 end
 
 """
-    lookup_idx(filename, hash::SHA1Hash)
+    lookup_idx(filename, hash::SHA1)
 
 Lookup the id `hash` is in the packfile index file `filename`. If contained in the index,
 return the absolute offset in the packfile, otherwise return -1.
 """
-function lookup_idx(filename, hash::SHA1Hash)
+function lookup_idx(filename, hash::SHA1)
     byte1 = hash.bytes[1]
     open(filename) do io
         # 1. Header
@@ -39,7 +39,7 @@ function lookup_idx(filename, hash::SHA1Hash)
                 # hash is not in index
                 return Int64(-1)
             end
-            i_hash = read(io, SHA1Hash)
+            i_hash = read(io, SHA1)
             if i_hash == hash
                 break
             elseif i_hash > hash
@@ -81,7 +81,7 @@ function read_idx(filename)
         i_max = ntoh(read(io, UInt32))
 
         # 3. SHA1
-        hashes = read(io, SHA1Hash, i_max)
+        hashes = read(io, SHA1, i_max)
 
         # 4. offset
         offsets = Int64.(ntoh.(read(io, UInt32, i_max)))
@@ -203,7 +203,7 @@ function getobjdata_pack(repo::GitRepo, packfile::String, offset::Integer, io::I
             reloffset = read_offset_varint(io)
             rawsrc = getobjdata_pack(repo, packfile, offset - reloffset)
         elseif t == Obj.ref_delta
-            srchash = read(io, SHA1Hash)
+            srchash = read(io, SHA1)
             rawsrc = getobjdata(repo, refhash)
         else
             error("Invalid tag $t")
@@ -254,7 +254,7 @@ end
 function buildindex(repo, packfile, idxfile=idxname(packfile))
     open(packfile) do pack
         open(idxfile,"w") do idx
-            d = SortedDict{SHA1Hash, Tuple{Int64, UInt32}}()
+            d = SortedDict{SHA1, Tuple{Int64, UInt32}}()
 
             nobjs = read_packhead(pack)
             for i = 1:nobjs

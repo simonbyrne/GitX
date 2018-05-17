@@ -1,3 +1,8 @@
+"""
+    GitObject
+
+An abstract type for git objects.
+"""
 abstract type GitObject end
 
 include("raw.jl")
@@ -24,12 +29,12 @@ c(::Type{GitObject}, c::ObjCode) =
 
 
 """
-    getobjdata(repo::GitRepo, hash::SHA1Hash)
+    getobjdata(repo::GitRepo, hash::SHA1)
 
 Fetch the tag and an array of raw bytes of the object id `hash` from `repo`. `t` is one of `Obj.commit`, `Obj.tree`, `Obj.Blob`, `Obj.tag`.
 """
-function getobjdata(repo::GitRepo, hash::SHA1Hash)
-    h = hex(hash)
+function getobjdata(repo::GitRepo, hash::SHA1)
+    h = string(hash)
     objpath = joinpath(repo.path, "objects", h[1:2], h[3:end])
     if isfile(objpath)
         # file is unpacked
@@ -62,7 +67,7 @@ function getobjdata_loose(filename)
 end
 
 
-function (::Type{T})(repo::GitRepo, hash::SHA1Hash) where {T<:GitObject}
+function (::Type{T})(repo::GitRepo, hash::SHA1) where {T<:GitObject}
     raw = getobjdata(repo, hash)
     S = checkcode(T, raw.objcode)
     obj = S(raw.data)

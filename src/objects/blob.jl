@@ -10,6 +10,6 @@ function oid(blob::GitBlob)
     ctx = SHA.SHA1_CTX()
     SHA.update!(ctx, Vector{UInt8}("blob $(sizeof(blob))\0"))
     SHA.update!(ctx, blob.data)
-    return SHA1Hash(SHA.digest!(ctx))
+    return SHA1(SHA.digest!(ctx))
 end
    

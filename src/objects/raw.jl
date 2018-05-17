@@ -20,5 +20,5 @@ function oid(raw::GitRawObject)
     ctx = SHA.SHA1_CTX()
     SHA.update!(ctx, Vector{UInt8}("$(raw.objcode) $(sizeof(raw.data))\0"))
     SHA.update!(ctx, raw.data)
-    return SHA1Hash(SHA.digest!(ctx))
+    return SHA1(SHA.digest!(ctx))
 end
