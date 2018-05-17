@@ -12,7 +12,7 @@ gitenv = Dict(
 "GIT_COMMITTER_EMAIL" => "test@example.com",
 "GIT_COMMITTER_DATE"  => "2017-09-30T17:18:19+0000")
 
-@show dir = mktempdir()
+dir = mktempdir()
 cd(dir) do
     withenv(gitenv...) do
         run(`git init --quiet`)
@@ -124,5 +124,32 @@ end
 
 @test GitX.oid(dir) == tree3_id
 
-# 4. Cleanup
+# 4. Remotes
+remotedir = mktempdir()
+cd(remotedir) do
+    run(`git init --quiet --bare`)
+end
+
+buf = IOBuffer(read(`git-upload-pack --advertise-refs $remotedir`))
+refs, caps = GitX.fetch_refs(buf)
+@test isempty(refs)
+
+cd(dir) do
+    withenv(gitenv...) do
+        run(`git remote add r1 $remotedir`)
+        run(`git push --quiet r1 master`)
+    end
+end
+
+buf = IOBuffer(read(`git-upload-pack --advertise-refs $remotedir`))
+refs, caps = GitX.fetch_refs(buf)
+
+@test length(refs) == 2
+@test refs[1] == ("HEAD" => cmt3_id)
+@test refs[2] == ("refs/heads/master" => cmt3_id)
+@test !isempty(caps)
+
+
+# 5. Cleanup
 rm(dir, recursive=true)
+rm(remotedir, recursive=true)

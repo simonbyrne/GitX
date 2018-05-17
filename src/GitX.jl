@@ -17,6 +17,6 @@ include("directory.jl")
 
 include("refs.jl")
 
-include("http.jl")
+include("fetch-pack.jl")
 
 end # module
