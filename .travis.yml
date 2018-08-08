@@ -22,9 +22,9 @@ git:
 #  apt: # apt-get for linux
 #    packages:
 #    - gfortran
-#before_script: # homebrew for mac
-#  - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
-
+before_script:
+  - echo $TRAVIS_BUILD_DIR
+  
 ## uncomment the following lines to override the default test script
 #script:
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("GitX"); Pkg.test("GitX"; coverage=true)'
