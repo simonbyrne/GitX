@@ -24,6 +24,7 @@ git:
 #    - gfortran
 before_script:
   - echo $TRAVIS_BUILD_DIR
+  - echo $TRAVIS_REPO_SLUG
   
 ## uncomment the following lines to override the default test script
 #script:
