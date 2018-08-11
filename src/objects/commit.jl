@@ -9,21 +9,21 @@ end
 function GitCommit(data::Vector{UInt8})
     io = IOBuffer(data)
     fieldname = readuntil(io, ' ')
-    @assert fieldname == "tree "
+    @assert fieldname == "tree"
     tree = SHA1(readline(io))
 
     parents = SHA1[]
     fieldname = readuntil(io, ' ')
-    while fieldname == "parent "
+    while fieldname == "parent"
         push!(parents, SHA1(readline(io)))
         fieldname = readuntil(io, ' ')
     end
 
-    @assert fieldname == "author "
+    @assert fieldname == "author"
     author = readline(io)
 
     fieldname = readuntil(io, ' ')
-    @assert fieldname == "committer "
+    @assert fieldname == "committer"
     committer = readline(io)
 
     empty = readline(io)

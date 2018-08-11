@@ -10,19 +10,19 @@ end
 function GitTag(data::Vector{UInt8})
     io = IOBuffer(data)
     fieldname = readuntil(io, ' ')
-    @assert fieldname == "object "
+    @assert fieldname == "object"
     object = SHA1(readline(io))
 
     fieldname = readuntil(io, ' ')
-    @assert fieldname == "type "
+    @assert fieldname == "type"
     objcode = ObjCode(readline(io))
 
     fieldname = readuntil(io, ' ')
-    @assert fieldname == "tag "
+    @assert fieldname == "tag"
     tag = readline(io)
 
     fieldname = readuntil(io, ' ')
-    @assert fieldname == "tagger "
+    @assert fieldname == "tagger"
     tagger = readline(io)
 
     empty = readline(io)

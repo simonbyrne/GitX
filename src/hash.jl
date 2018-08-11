@@ -33,5 +33,6 @@ macro sha1_str(str)
 end
 
 function Base.read(io::IO, ::Type{SHA1})
-    SHA1(read(io, UInt8, 20))
+    data = Array{UInt8}(undef, 20)
+    SHA1(read!(io, data))
 end

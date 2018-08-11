@@ -1,5 +1,5 @@
 using GitX
-using Base.Test
+using Test
 
 # 1. Set up a git repository
 

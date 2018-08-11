@@ -9,8 +9,8 @@ struct GitMutableTree
 end
 
 function Base.setindex!(mtree::GitMutableTree, value, path::String)
-    n = findfirst(path, '/')
-    if n == 0
+    n = findfirst(isequal('/'), path)
+    if n === nothing
         # file
         mtree.entries[path] = value
     else

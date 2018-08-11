@@ -1,7 +1,7 @@
 const zeroid = "0"^40
 
 function readpktline(io)
-    len = parse(Int, String(read(io,4)), 16)
+    len = parse(Int, String(read(io,4)), base=16)
     len == 0 && return nothing
     chomp(String(read(io, len-4)))
 end
@@ -14,7 +14,7 @@ function fetch_refs(io::IO)
     if refpkt1 == "version=1"
         refpkt1 = readpktline(io)
     end    
-    if refpkt1 isa Void
+    if refpkt1 === nothing
         return reflist, capabilities
     end
 
@@ -23,11 +23,11 @@ function fetch_refs(io::IO)
 
     if refpkt == "$zeroid capabilities^{}"
         refpkt = readpktline(io)
-	@assert refpkt isa Void
+	@assert refpkt === nothing
         return reflist, capabilities
     end
 
-    while !isa(refpkt, Void)
+    while refpkt !== nothing
 	hashstr, ref = split(refpkt,' ',limit=2)
 	push!(reflist, ref => SHA1(hashstr))
 	refpkt = readpktline(io)

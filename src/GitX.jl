@@ -1,6 +1,7 @@
 module GitX
 
-import SHA
+using SHA
+import Base: SHA1
 import CodecZlib: ZlibDecompressorStream
 import DataStructures: SortedDict
 

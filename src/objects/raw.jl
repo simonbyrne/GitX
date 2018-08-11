@@ -11,7 +11,7 @@ function ObjCode(name::AbstractString)
     error("unknown tag type $name")
 end
 
-immutable GitRawObject <: GitObject
+struct GitRawObject <: GitObject
     objcode::ObjCode
     data::Vector{UInt8}
 end

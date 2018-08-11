@@ -13,7 +13,7 @@ function fetch_cap(url)
     @assert pkt1 == "# service=$servicename"
 
     pkt2 = readpktline(b1)
-    @assert pkt2 isa Void
+    @assert pkt2 === nothing
 
     fetch_refs(b1)
 end
